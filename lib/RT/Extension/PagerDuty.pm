@@ -95,7 +95,7 @@ sub Notify {
     description => $args{description},
     client => 'Request Tracker',
     client_url => $args{client_url},
-  }
+  };
 
 	my $payload_json = JSON::encode_json($payload);
 
