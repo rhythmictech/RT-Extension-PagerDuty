@@ -99,11 +99,17 @@ sub Notify {
 
 	my $payload_json = JSON::encode_json($payload);
 
+  my $api_token;
+  $api_token = RT->Config->Get('PagerDutyApiToken');
+  if (!$api_token) { return; }
+
 	my $service_webhook;
 	$service_webhook = 'https://events.pagerduty.com/generic/2010-04-15/create_event.json';
 
 	my $ua = LWP::UserAgent->new();
 	$ua->timeout(10);
+  $ua->default_header('Content-type' => 'application/json');
+  $ua->default_header('Authorization' => 'Token token='.$api_token);
 
 	$RT::Logger->info('Pushing notification to PagerDuty: '. $payload_json);
 	my $response = $ua->post($service_webhook,[ 'payload' => $payload_json ]);

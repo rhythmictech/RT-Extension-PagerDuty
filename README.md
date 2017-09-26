@@ -29,15 +29,21 @@ Clear your mason cache
 
 Restart your webserver
 
+# CONFIGURATIONS
+
+Edit your /opt/rt4/etc/RT_SiteConfig.pm to include: Set($PagerDutyApiToken, "pagerduty-v1-api-token");
+
 # USAGE
 
 Basic scrip use. Add this code to your scrip.
 
 ```
-my $client_url = "{RT->Config->Get("WebURL")}Ticket/Display.html?id={$Ticket->id}";
-my $service_key = "00000000000000000000000000000000";
-my $incident_key => "RT:{$Ticket->Id}";
-my $description => $Ticket->Subject;
+my $ticket = $self->TicketObj;
+
+my $client_url = RT->Config->Get("WebURL")."Ticket/Display.html?id=".$ticket->id;
+my $service_key = "0000000000000000000000000000000";
+my $incident_key => $ticket->Id;
+my $description => $ticket->Subject;
 
 RT::Extension::PagerDuty::Notify(service_key => $service_key, incident_key => $incident_key, description => $description, client_url => $client_url);
 ```
@@ -46,13 +52,13 @@ RT::Extension::PagerDuty::Notify(service_key => $service_key, incident_key => $i
 # AUTHORS
 [Maciek] (http://www.gossamer-threads.com/lists/rt/users/128413#128413)  
 Andrew Wippler (https://github.com/andrewwippler/RT-Extension-Slack)
-Steven Dickenson
+Steven Dickenson (https://github.com/sdickenson/RT-Extension-PagerDuty)
 
 
 # LICENSE AND COPYRIGHT
     The MIT License (MIT)
 
-    Copyright (c) 2015 Andrew Wippler
+    Copyright (c) 2017 Steven Dickenson
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the
