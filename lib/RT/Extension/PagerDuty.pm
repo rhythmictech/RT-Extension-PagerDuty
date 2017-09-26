@@ -1,7 +1,6 @@
 use strict;
 use warnings;
-use HTTP::Request::Common qw(POST);
-use LWP::UserAgent;
+use REST::Client;
 use JSON;
 package RT::Extension::PagerDuty;
 
@@ -97,27 +96,27 @@ sub Notify {
     client_url => $args{client_url},
   };
 
-	my $payload_json = JSON::encode_json($payload);
-
-  my $api_token;
-  $api_token = RT->Config->Get('PagerDutyApiToken');
+	my $service_webhook = 'https://events.pagerduty.com/generic/2010-04-15/create_event.json';
+  my $api_token = RT->Config->Get('PagerDutyApiToken');
   if (!$api_token) { return; }
 
-	my $service_webhook;
-	$service_webhook = 'https://events.pagerduty.com/generic/2010-04-15/create_event.json';
+	my $payload_json = JSON::encode_json($payload);
+  my $payload_headers = {
+    'Content-type' => 'application/json',
+    'Authorization' => 'Token token='.$api_token,
+  };
 
-	my $ua = LWP::UserAgent->new();
-	$ua->timeout(10);
-  $ua->default_header('Content-type' => 'application/json');
-  $ua->default_header('Authorization' => 'Token token='.$api_token);
+  my $client = REST::Client->new();
 
 	$RT::Logger->info('Pushing notification to PagerDuty: '. $payload_json);
-	my $response = $ua->post($service_webhook,[ 'payload' => $payload_json ]);
-	if ($response->is_success) {
+
+  $client->POST($service_webhook, $payload_json, $payload_headers);
+
+	if ($client->responseCode() == '200') {
 		return;
 	} else {
 		$RT::Logger->error('Failed to push notification to PagerDuty ('.
-		$response->code .': '. $response->message .')');
+		$client->responseCode() .': '. $client->responseContent .')');
 	}
 }
 
