@@ -2,8 +2,7 @@
 Integration with PagerDuty webhooks
 
 # DESCRIPTION
-This module is designed for *Request Tracker 4* integrating with *PagerDuty* webhooks. It was adapted from Andrew Wippler's original code [available here](https://github.com/andrewwippler/RT-Extension-Slack)
-
+This module is designed for *Request Tracker 4* integrating with *PagerDuty* webhooks. 
 
 # RT VERSION
 Works with RT 4.2.0 and newer
@@ -42,39 +41,28 @@ my $ticket = $self->TicketObj;
 
 my $client_url = RT->Config->Get("WebURL")."Ticket/Display.html?id=".$ticket->id;
 my $service_key = "0000000000000000000000000000000";
-my $incident_key => $ticket->Id;
-my $description => $ticket->Subject;
+my $incident_key = "RT:".$ticket->id;
+my $description = $ticket->Subject;
 
 RT::Extension::PagerDuty::Notify(service_key => $service_key, incident_key => $incident_key, description => $description, client_url => $client_url);
 ```
 
 
 # AUTHORS
-[Maciek] (http://www.gossamer-threads.com/lists/rt/users/128413#128413)  
-Andrew Wippler (https://github.com/andrewwippler/RT-Extension-Slack)
 Steven Dickenson (https://github.com/sdickenson/RT-Extension-PagerDuty)
 
 
 # LICENSE AND COPYRIGHT
-    The MIT License (MIT)
+		Copyright 2018 Steven Dickenson
 
-    Copyright (c) 2017 Steven Dickenson
+		Licensed under the Apache License, Version 2.0 (the "License");
+		you may not use this file except in compliance with the License.
+		You may obtain a copy of the License at
 
-    Permission is hereby granted, free of charge, to any person obtaining a
-    copy of this software and associated documentation files (the
-    "Software"), to deal in the Software without restriction, including
-    without limitation the rights to use, copy, modify, merge, publish,
-    distribute, sublicense, and/or sell copies of the Software, and to
-    permit persons to whom the Software is furnished to do so, subject to
-    the following conditions:
+			http://www.apache.org/licenses/LICENSE-2.0
 
-    The above copyright notice and this permission notice shall be included
-    in all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+		Unless required by applicable law or agreed to in writing, software
+		distributed under the License is distributed on an "AS IS" BASIS,
+		WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		See the License for the specific language governing permissions and
+		limitations under the License.
